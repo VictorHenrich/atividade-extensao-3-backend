@@ -56,13 +56,15 @@ export default class MQTTServer implements Server{
     private onPublish(packet: aedes.AedesPublishPacket, client: aedes.Client | null): void {
         const { topic: routeName, payload } = packet;
 
-        const data = JSON.parse(payload.toString());
+        console.log(`Mensagem recebida do tópico ${routeName}: ${payload}`)
 
         for(const route of this.routes){
             if(route.routeName == routeName){
+                const data = JSON.parse(payload.toString());
+
                 route.handle(this, client, data);
 
-                break;
+                return;
             }
         }
 

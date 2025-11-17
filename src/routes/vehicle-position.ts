@@ -15,7 +15,7 @@ interface VehiclePositionResponseData extends VehiclePositionData{
 
 export default class VehiclePositionRoute extends AbstractMQTTRoute<VehiclePositionData>{
     handle(broker: MQTTServer, socket: Client | null, data: VehiclePositionData): Promise<void> | void {
-        
+        console.log("RECEBENDO DADOS: ", data);
     }
 
     get routeName(){
