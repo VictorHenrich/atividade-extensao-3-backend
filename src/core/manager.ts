@@ -8,9 +8,9 @@ export interface ServerParameters{
 }
 
 export default class Manager implements Server{
-    private readonly websocketServer: SocketServer;
+    public readonly websocketServer: SocketServer;
 
-    private readonly mqttServer: MQTTServer;
+    public readonly mqttServer: MQTTServer;
 
     constructor({
         routes = []
@@ -20,6 +20,7 @@ export default class Manager implements Server{
         });
 
         this.mqttServer = new MQTTServer({
+            socketServer: this.websocketServer,
             routes: routes.filter(route => route.type == "mqtt")
         });
     }
@@ -32,4 +33,5 @@ export default class Manager implements Server{
         for(const server of servers)
             server.run();
     }
+
 }

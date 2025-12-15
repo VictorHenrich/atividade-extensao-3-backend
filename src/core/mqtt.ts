@@ -3,11 +3,13 @@ import { createServer } from "net";
 import { Route } from "@/core/interfaces.js";
 import { MQTT_HOST, MQTT_PORT } from "@/core/config.js";
 import { Server } from "@/core/interfaces.js";
+import SocketServer from "./socket.js";
 
 export interface MQTTServerParameters{
     port?: number | string,
     host?: string,
     routes: AbstractMQTTRoute<any>[];
+    socketServer: SocketServer
 }
 
 export abstract class AbstractMQTTRoute<T> implements Route<MQTTServer, aedes.Client | null, T>{
@@ -28,17 +30,22 @@ export default class MQTTServer implements Server{
     private readonly port: number;
 
     private routes: AbstractMQTTRoute<any>[];
+
+    public readonly socketServer: SocketServer;
     
     constructor({
+        socketServer,
         host = MQTT_HOST,
         port = MQTT_PORT,
-        routes = []
+        routes = [],
     }: MQTTServerParameters){
         this.routes = routes;
 
         this.host = host;
 
         this.port = parseInt(`${port}`);
+
+        this.socketServer = socketServer;
     }
 
     private onListening(): void{
